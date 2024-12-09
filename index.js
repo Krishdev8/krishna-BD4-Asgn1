@@ -13,13 +13,18 @@ app.use(express.static('static'));
 let db;
 
 (async () => {
-  db = await open({
-    filename: './database.sqlite',
-    driver: sqlite3.Database,
-  });
+  try {
+    db = await open({
+      filename: './database.sqlite',
+      driver: sqlite3.Database,
+    });
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Failed to connect to the database:', error);
+  }
 })();
 
-//Exercise 1: Get All Restaurants
+// Exercise 1: Get All Restaurants
 async function fetchAllRestaurants() {
   let query = 'SELECT * FROM restaurants';
   let response = await db.all(query, []);
@@ -38,7 +43,7 @@ app.get('/restaurants', async (req, res) => {
   }
 });
 
-//Exercise 2: Get Restaurant by ID
+// Exercise 2: Get Restaurant by ID
 async function fetchRestaurantsById(id) {
   let query = 'SELECT * FROM restaurants WHERE id = ?';
   let response = await db.all(query, [id]);
@@ -60,7 +65,7 @@ app.get('/restaurants/details/:id', async (req, res) => {
   }
 });
 
-//Exercise 3: Get Restaurants by Cuisine
+// Exercise 3: Get Restaurants by Cuisine
 async function fetchRestaurantsByCuisine(cuisine) {
   let query = 'SELECT * FROM restaurants WHERE cuisine = ?';
   let response = await db.all(query, [cuisine]);
@@ -83,7 +88,7 @@ app.get('/restaurants/cuisine/:cuisine', async (req, res) => {
   }
 });
 
-//Exercise 4: Get Restaurants by Filter
+// Exercise 4: Get Restaurants by Filter
 async function fetchRestaurantsByFilters(isVeg, hasOutdoorSeating, isLuxury) {
   let query =
     'SELECT * FROM restaurants WHERE isVeg = ? AND hasOutdoorSeating = ? AND isLuxury = ?';
@@ -110,7 +115,7 @@ app.get('/restaurants/filter', async (req, res) => {
   }
 });
 
-//Exercise 5: Get Restaurants Sorted by Rating
+// Exercise 5: Get Restaurants Sorted by Rating
 async function fetchRestaurantsSortedByRating() {
   let query = 'SELECT * FROM restaurants ORDER BY rating DESC';
   let response = await db.all(query, []);
@@ -129,8 +134,7 @@ app.get('/restaurants/sort-by-rating', async (req, res) => {
   }
 });
 
-//Exercise 6: Get All Dishes
-
+// Exercise 6: Get All Dishes
 async function fetchAllDishes() {
   let query = 'SELECT * FROM dishes';
   let response = await db.all(query, []);
@@ -150,7 +154,7 @@ app.get('/dishes', async (req, res) => {
   }
 });
 
-//Exercise 7: Get Dish by ID
+// Exercise 7: Get Dish by ID
 async function fetchDishesById(id) {
   let query = 'SELECT * FROM dishes WHERE id = ?';
   let response = await db.all(query, [id]);
@@ -172,7 +176,7 @@ app.get('/dishes/details/:id', async (req, res) => {
   }
 });
 
-//Exercise 8: Get Dishes by Filter
+// Exercise 8: Get Dishes by Filter
 async function fetchDishesByFilter(isVeg) {
   let query = 'SELECT * FROM dishes WHERE isVeg = ?';
   let response = await db.all(query, [isVeg]);
@@ -192,7 +196,7 @@ app.get('/dishes/filter', async (req, res) => {
   }
 });
 
-//Exercise 9: Get Dishes Sorted by Price
+// Exercise 9: Get Dishes Sorted by Price
 async function fetchDishesSortedByPrice() {
   let query = 'SELECT * FROM dishes ORDER BY price';
   let response = await db.all(query, []);
